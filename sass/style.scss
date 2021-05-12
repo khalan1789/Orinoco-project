@@ -1,5 +1,10 @@
 $primary: white;
 
+.card-img-top{
+    @media screen and(min-width:780px) {
+        height:200px;
+    }
+}
 
 @import "vendors/Bootstrap/bootstrap.scss";
 
@@ -7,12 +12,18 @@ main{
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
+    @media screen and(min-width:1200px) and(max-width:1500px){
+    justify-content: flex-start;
+                
+    }
     
-    }
+}
+
 .main-title{
-        width:100%;
-        text-align: center;
-    }
+    width:100%;
+    text-align: center;
+}
+
 .teddy-card{
     border: solid 1px #26b2dd;
     border-radius: 2px;
@@ -20,15 +31,62 @@ main{
     margin: 10px;
     width:90%;
     @media screen and(min-width:780px){
-       
-        width:250px;
+        width:350px;
+    }
+    @media screen and(min-width:1000px) {
+        min-height: 450px;
+        width:280px;
     }
 }
+
 .teddy-detail{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     padding : 5px;
+}
+
+.fa-arrow-circle-left{
+    margin-right: 12px;
+}
+
+.product-presentation{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    // justify-content: center;
+    @media screen and (min-width:992px) {
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+    .product-img{
+        text-align: center;
+        margin-top:20px;
+        margin-bottom:20px;
+        width:100%;
+        img{
+            width:100%;
+            height:100%;
+            object-fit: cover;
+         }
+        
+    }
+    .product-specification{
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        width:100%;
+        @media screen and (min-width:992px) {
+            margin-left: 20px;
+            display:flex;
+            flex-direction: column;
+            justify-content: space-around;
+            max-width: 400px;
+        }
+        p{
+            margin-top: 10px;
+        }    
+    }
 }
 

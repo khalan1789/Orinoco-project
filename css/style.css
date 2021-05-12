@@ -1,4 +1,10 @@
 @charset "UTF-8";
+@media screen and (min-width: 780px) {
+  .card-img-top {
+    height: 200px;
+  }
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors
@@ -9932,6 +9938,11 @@ main {
   flex-flow: row wrap;
   justify-content: center;
 }
+@media screen and (min-width: 1200px) and (max-width: 1500px) {
+  main {
+    justify-content: flex-start;
+  }
+}
 
 .main-title {
   width: 100%;
@@ -9947,7 +9958,13 @@ main {
 }
 @media screen and (min-width: 780px) {
   .teddy-card {
-    width: 250px;
+    width: 350px;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .teddy-card {
+    min-height: 450px;
+    width: 280px;
   }
 }
 
@@ -9957,6 +9974,51 @@ main {
   align-items: center;
   flex-direction: column;
   padding: 5px;
+}
+
+.fa-arrow-circle-left {
+  margin-right: 12px;
+}
+
+.product-presentation {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+@media screen and (min-width: 992px) {
+  .product-presentation {
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+}
+.product-presentation .product-img {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+.product-presentation .product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.product-presentation .product-specification {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+@media screen and (min-width: 992px) {
+  .product-presentation .product-specification {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    max-width: 400px;
+  }
+}
+.product-presentation .product-specification p {
+  margin-top: 10px;
 }
 
 /*# sourceMappingURL=style.css.map */
