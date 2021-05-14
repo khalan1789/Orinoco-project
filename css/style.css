@@ -9976,6 +9976,7 @@ main {
   padding: 5px;
 }
 
+/********PAGE PRESENTATION DU PRODUIT**********/
 .fa-arrow-circle-left {
   margin-right: 12px;
 }
@@ -10019,6 +10020,16 @@ main {
 }
 .product-presentation .product-specification p {
   margin-top: 10px;
+}
+
+#quantity {
+  width: 50px;
+  -moz-appearance: textfield;
+}
+#quantity input {
+  outline-color: 255;
+  text-align: center;
+  padding-left: 15px;
 }
 
 /*# sourceMappingURL=style.css.map */

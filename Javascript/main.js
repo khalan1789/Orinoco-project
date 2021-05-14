@@ -22,12 +22,16 @@
               <h5 class="card-title">${teddy.name}</h5>
               <p class="card-text">${teddy.description}</p>
               <p class="card-price">Prix : ${teddy.price}</p>
-              <button class="btn btn-info choice" data-number="${teddy._id}" type="button">Voir le produit</button>
+              <a class="btn btn-info choice" href="product.html?id=${teddy._id}" type="button">Voir le produit</a>
             </div>
         </div>`
         );
       } 
-         //sélection de tous les boutons pour l'écoute
+
+      /****Test de l'api dans le fetch pour voir si j'arrive à cliquer sur chacun des
+       * boutons indépendamment
+       */
+       //sélection de tous les boutons pour l'écoute
       const buttonList = document.getElementsByClassName("choice"); 
       console.log(buttonList) //j'obtiens un array avec ma liste de btn
       let clicSum = 0;
@@ -38,6 +42,7 @@
       }
     )
     } 
+    console.log(teddiesList)
   }
   )
 

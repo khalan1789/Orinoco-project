@@ -47,6 +47,7 @@ main{
     padding : 5px;
 }
 
+/********PAGE PRESENTATION DU PRODUIT**********/
 .fa-arrow-circle-left{
     margin-right: 12px;
 }
@@ -89,4 +90,14 @@ main{
         }    
     }
 }
-
+ #quantity{
+     width:  50px;
+     -moz-appearance: textfield;
+     
+     input{
+         outline-color: blue($color: $primary);
+         text-align: center;
+         padding-left: 15px;
+         
+     }
+ }
