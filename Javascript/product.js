@@ -21,11 +21,11 @@ fetch("http://localhost:3000/api/teddies/" + UrlId)
 })
 .then(teddyProduct => {
   console.log (teddyProduct)
-  // document.querySelector("#color-list").innerHTML = teddyProduct.colors;
   document.querySelector(".product-title").innerText = teddyProduct.name;
   document.querySelector(".product-description").innerText = teddyProduct.description;
   document.querySelector(".product-price").innerText = "Prix : " + teddyProduct.price;
   document.querySelector(".product-img").innerHTML = `<img src="${teddyProduct.imageUrl}" alt="">`;
+  //recuperation des couleurs en forme de liste déroulante
   for (let teddyColor of teddyProduct.colors){
     document.querySelector("#color-list").innerHTML += 
     "<option>" + teddyColor + "</option>";
