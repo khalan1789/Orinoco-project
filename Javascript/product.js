@@ -1,4 +1,7 @@
-let serverUrlApi = `"http://localhost:3000/api/teddies/"`;
+//récupération de la liste des articles via le tableau de storage
+
+let teddiesListFromStorage = JSON.parse(localStorage.getItem("teddiesListForStorage"));
+console.log(teddiesListFromStorage)
 
 /*Récupération de l'id dans l'url au chargement de la page */
 
@@ -6,32 +9,46 @@ const UrlQueryString = window.location.search;
 const UrlParams = new URLSearchParams(UrlQueryString);
 const UrlId = UrlParams.get("id");
 
-let apiItem = "'"+ serverUrlApi + UrlId + "'";
+/*********************PARTIE RECUP DES PORDUITS VIA LE STORAGE ET ASSIGNATION DU BON PRODUIT */
+// Récupération de chacun des produits et assignations de leurs éléments
 
 
-/** Envoi de la demande à l'api avec l'id récupérée */
-
-// fetch('serveurUrlApi + urlId')
-fetch("http://localhost:3000/api/teddies/" + UrlId)
-.then(response => {
-  if (response.ok){return response.json()}
-  else{
-    console.log("erreur :" + response.status)
-  }
-})
-.then(teddyProduct => {
-  console.log (teddyProduct)
-  document.querySelector(".product-title").innerText = teddyProduct.name;
-  document.querySelector(".product-description").innerText = teddyProduct.description;
-  document.querySelector(".product-price").innerText = "Prix : " + teddyProduct.price;
-  document.querySelector(".product-img").innerHTML = `<img src="${teddyProduct.imageUrl}" alt="">`;
-  document.querySelector(".product-specification").id = teddyProduct._id;
-  //recuperation des couleurs en forme de liste déroulante
-  for (let teddyColor of teddyProduct.colors){
-    document.querySelector("#color-list").innerHTML += 
-    "<option>" + teddyColor + "</option>";
+ 
+   //itération à travers des articles récupérés via le tableau teddiesListFromStorage
+  for (let teddyProduct of teddiesListFromStorage){
+      //si le id de l'url correspond à l'id du teddy
+      if(teddyProduct._id === UrlId){
+      document.querySelector(".product-title").innerText = teddyProduct.name;
+      document.querySelector(".product-description").innerText = teddyProduct.description;
+      document.querySelector(".product-price").innerText = "Prix : " + teddyProduct.price;
+      document.querySelector(".product-img").innerHTML = `<img src="${teddyProduct.image}" alt="">`;
+      document.querySelector(".product-specification").id = teddyProduct._id;
+      //recuperation des couleurs en forme de liste déroulante
+      for (let teddyColor of teddyProduct.colors){
+        document.querySelector("#color-list").innerHTML += 
+        "<option>" + teddyColor + "</option>";
+          
+        }
     }
-});
+  };
+    /*teddyName = teddy.name;
+    teddyDescription = teddy.description;
+    teddyImage = teddy.imageUrlmage;
+    teddyPrice = teddy.price;
+    teddyColorList = teddy.colors;
+    teddyId = UrlId;
+  }
+
+  document.querySelector(".product-title").innerText = teddyName;
+  document.querySelector(".product-description").innerText = teddyDescription;
+  document.querySelector(".product-price").innerText = "Prix : " + teddyPrice;
+  document.querySelector(".product-img").innerHTML = `<img src="${teddyImage}" alt="">`;
+  document.querySelector(".product-specification").id = teddyId;
+  //recuperation des couleurs en forme de liste déroulante
+  for (let teddyColor of teddyColorList){
+    document.querySelector("#color-list").innerHTML += 
+    "<option>" + teddyColor + "</option>";}*/
+
   
 
  /******* Fonction pour ajouter supprimer un artcile et l'afficher dans l'input ***** */
@@ -73,11 +90,12 @@ BtnSendToBasket.addEventListener("click", ()=>{
   
   //clé du tableau pour le panier du localStorage
   let basketOrder = JSON.parse(localStorage.getItem("basketItems"));
-
+  
   //objet et quantité à ajouter dans le panier
   let dataItem = {
     id : document.querySelector(".product-specification").id,          //objet et qté validés
     name : document.querySelector(".product-title").innerText,
+    image : document.querySelector(".product-img").innerHTML,
     quantity : quantityInput.value
   }
   
@@ -100,5 +118,32 @@ BtnSendToBasket.addEventListener("click", ()=>{
 });
 
 
+/**************************AVANT AVEC LE SYSTEME DE L'API****************************** */
+
+//let apiItem = "'"+ serverUrlApi + UrlId + "'";
 
 
+/** Envoi de la demande à l'api avec l'id récupérée */
+
+// fetch('serveurUrlApi + urlId')
+/*fetch("http://localhost:3000/api/teddies/" + UrlId)
+.then(response => {
+  if (response.ok){return response.json()}
+  else{
+    console.log("erreur :" + response.status)
+  }
+})
+.then(teddyProduct => {
+  console.log (teddyProduct)
+  document.querySelector(".product-title").innerText = teddyProduct.name;
+  document.querySelector(".product-description").innerText = teddyProduct.description;
+  document.querySelector(".product-price").innerText = "Prix : " + teddyProduct.price;
+  document.querySelector(".product-img").innerHTML = `<img src="${teddyProduct.imageUrl}" alt="">`;
+  document.querySelector(".product-specification").id = teddyProduct._id;
+  //recuperation des couleurs en forme de liste déroulante
+  for (let teddyColor of teddyProduct.colors){
+    document.querySelector("#color-list").innerHTML += 
+    "<option>" + teddyColor + "</option>";
+    }
+});
+  */

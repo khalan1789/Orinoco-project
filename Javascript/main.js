@@ -1,13 +1,18 @@
 
 // Classe constructor pour le rajout d'un article si besoin
-/* class Article {
-  constructor(description, name, price, _id){
+class TeddyArticle {
+  constructor(description, name, price,image, colors, _id){
     this.description = description,
     this.name = name,
     this.price = price,
+    this.image = image,
+    this.colors = colors,
     this._id = _id
-    }
-}*/
+  }
+}
+const TeddiesListFromBackEnd = [];
+let indiArt
+let articleList = [];
 
 // Récupération des données à l"API
     fetch('http://localhost:3000/api/teddies')
@@ -26,27 +31,35 @@
             </div>
         </div>`
         );
+        //Récupération du tableau de l'api pour le reproduire en local 
+        TeddiesListFromBackEnd.push(new TeddyArticle(teddy.description, teddy.name, teddy.price, teddy.imageUrl, teddy.colors, teddy._id));
+                
       } 
-
-      /****Test de l'api dans le fetch pour voir si j'arrive à cliquer sur chacun des
-       * boutons indépendamment
-       */
-       //sélection de tous les boutons pour l'écoute
-      const buttonList = document.getElementsByClassName("choice"); 
-      console.log(buttonList) //j'obtiens un array avec ma liste de btn
-      let clicSum = 0;
-      for (let btn of buttonList){ //je veux qu'au clic cela ajoute 1 au total
-      btn.addEventListener("click", function(btn){
-     clicSum +=1 ;
-      console.log(clicSum) //>>>pourquoi ça me rajoute 3 par 3 à chaque clic??
-      }
-    )
-    } 
-    console.log(teddiesList)
+      // teddiesListFromBackEnd.push(teddiesList);
+      
+    //si le storage a déjà le tableau de la liste on le récupère et remplace
+    //sinon on le crée et on l'envoi
+    if(localStorage.getItem("teddiesListForStorage")){
+      localStorage.removeItem("teddiesListForStorage");
+      localStorage.setItem("teddiesListForStorage", JSON.stringify(TeddiesListFromBackEnd))
+    }else{
+      localStorage.setItem("teddiesListForStorage", JSON.stringify(TeddiesListFromBackEnd))
+    }
   }
   )
 
+  /*//si le storage a déjà le tavleau de la liste
+  if(localStorage.getItem("teddiesListForStorage")){
+    localStorage.removeItem("teddiesListForStorage");
+    localStorage.setItem("teddiesListForStorage", JSON.stringify(teddiesListFromBackEnd))
+  }else{
+    localStorage.setItem("teddiesListForStorage", JSON.stringify(teddiesListFromBackEnd))
+  }
 
+*/
+
+
+  // console.log(teddiesListFromBackEnd)
 //fonction pour au clic de l'objet choisi cela aille voir sa fiche
 
 
