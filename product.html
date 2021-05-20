@@ -53,8 +53,8 @@
         <div class="product-img">  <!--Div de l'image-->
                 
         </div>
-           <div class="product-specification">  <!--Div du descriptif-->
-                <h3 class="product-title text-center"></h3> <!--Titre du produit-->
+           <div class="product-specification" id="">  <!--Div du descriptif-->
+                <h3 class="product-title text-center" data-name=""></h3> <!--Titre du produit-->
                 <p class="product-description text-justify"><!--Descriptif du produit--> </p>
                 <select id="color-list">
                     <!--Liste déroulante du choix des couleurs-->
@@ -63,10 +63,10 @@
                 <form method="">
                     <div>
                         <button type="button" id="btn-less" class="btn"><i class="fas fa-minus"></i></button>
-                        <input type="text" id="quantity" value="1"></input>
+                        <input type="number" class="quantity" value="1"/>
                         <button type="button" id="btn-plus" class="btn"><i class="fas fa-plus-square"></i></button>
                     </div>
-                    <button type="submit" class="btn btn-dark" >Ajouter au panier</button>
+                    <button type="button" class="btn btn-dark" id="btn-sendToBasket" >Ajouter au panier</button>
                 </form>
            </div>
             
