@@ -1,3 +1,4 @@
+const ApiToFetch = 'http://localhost:3000/api/teddies';
 
 // Classe constructor pour le rajout d'un article si besoin
 class TeddyArticle {
@@ -10,12 +11,9 @@ class TeddyArticle {
     this._id = _id
   }
 }
-const TeddiesListFromBackEnd = [];
-let indiArt
-let articleList = [];
 
 // Récupération des données à l"API
-    fetch('http://localhost:3000/api/teddies')
+    fetch(ApiToFetch)
     .then(response => response.json())
     .then(teddiesList => {
       // Récupération du array des teddy et implantation de chacun dans le html
@@ -25,28 +23,14 @@ let articleList = [];
         <img src="${teddy.imageUrl}" class="card-img-top" alt="">
           <div class="teddy-detail">
               <h5 class="card-title">${teddy.name}</h5>
-              <p class="card-text">${teddy.description}</p>
-              <p class="card-price">Prix : ${teddy.price}</p>
-              <a class="btn btn-info choice" href="product.html?id=${teddy._id}" type="button">Voir le produit</a>
+              <p class="card-price">Prix : ${teddy.price /100} €</p>
+              <a class="btn btn-info choice" href="./product.html?id=${teddy._id}" type="button">Voir le produit</a>
             </div>
         </div>`
-        );
-        //Récupération du tableau de l'api pour le reproduire en local 
-        TeddiesListFromBackEnd.push(new TeddyArticle(teddy.description, teddy.name, teddy.price, teddy.imageUrl, teddy.colors, teddy._id));
-                
-      } 
-      // teddiesListFromBackEnd.push(teddiesList);
-      
-    //si le storage a déjà le tableau de la liste on le récupère et remplace
-    //sinon on le crée et on l'envoi
-    if(localStorage.getItem("teddiesListForStorage")){
-      localStorage.removeItem("teddiesListForStorage");
-      localStorage.setItem("teddiesListForStorage", JSON.stringify(TeddiesListFromBackEnd))
-    }else{
-      localStorage.setItem("teddiesListForStorage", JSON.stringify(TeddiesListFromBackEnd))
+        ); 
+      }    
     }
-  }
-  )
+    )
 
   /*//si le storage a déjà le tavleau de la liste
   if(localStorage.getItem("teddiesListForStorage")){
@@ -62,4 +46,16 @@ let articleList = [];
   // console.log(teddiesListFromBackEnd)
 //fonction pour au clic de l'objet choisi cela aille voir sa fiche
 
-
+ //   // teddiesListFromBackEnd.push(teddiesList);
+      
+    // //si le storage a déjà le tableau de la liste on le récupère et remplace
+    // //sinon on le crée et on l'envoi
+    // if(localStorage.getItem("teddiesListForStorage")){
+    //   localStorage.removeItem("teddiesListForStorage");
+    //   localStorage.setItem("teddiesListForStorage", JSON.stringify(TeddiesListFromBackEnd))
+    // }else{
+    //   localStorage.setItem("teddiesListForStorage", JSON.stringify(TeddiesListFromBackEnd))
+    // }
+// //Récupération du tableau de l'api pour le reproduire en local 
+// TeddiesListFromBackEnd.push(new TeddyArticle(teddy.description, teddy.name, teddy.price, teddy.imageUrl, teddy.colors, teddy._id));
+            
