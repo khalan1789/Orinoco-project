@@ -23,7 +23,7 @@ class TeddyArticle {
         <img src="${teddy.imageUrl}" class="card-img-top" alt="">
           <div class="teddy-detail">
               <h5 class="card-title">${teddy.name}</h5>
-              <p class="card-price">Prix : ${teddy.price /100} €</p>
+              <p class="card-price">Prix : ${teddy.price /100} \u20AC</p>
               <a class="btn btn-info choice" href="./product.html?id=${teddy._id}" type="button">Voir le produit</a>
             </div>
         </div>`

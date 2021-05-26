@@ -1,13 +1,24 @@
 //Récupérer les données du localStorage
 //récupération du panier
 let basketOrder = JSON.parse(localStorage.getItem("basketItems"));
-
+// titleOfBasket();
 
 /**************         PRIX TOTAL A L'IMPORT DU PANIER   ****************** */
 let totalToPay = 0;
 const DisplayTotal = document.querySelector("#totalBasketPrice");
  // récupération et attribution des données dans le panier
-for (let item of basketOrder){
+if(!basketOrder){
+  document.querySelector("#text-basket").innerText = "Votre panier est vide !";
+  document.querySelector("#text-basket").classList.add("mt-5", "mb-5");
+  document.querySelector("#form-order").classList.add("text-white-50");
+  document.querySelector(".total").classList.add("d-none");
+}else{
+  document.querySelector("#text-basket").innerText = "Votre panier contient :";
+  document.querySelector("#text-basket").classList.remove("mt-5", "mb-5");
+  document.querySelector("#form-order").classList.remove("text-white-50");
+  document.querySelector(".total").classList.remove("d-none");
+  DisplayTotal.classList.remove("d-none");
+  for (let item of basketOrder){
  
     document.querySelector("#basketContain").insertAdjacentHTML("beforeend", `
       <div class="row mt-2 mb-3 border-bottom border-primary" data-id=${item.id}>
@@ -23,7 +34,7 @@ for (let item of basketOrder){
               </div>
               <div class="d-flex justify-content-center flex-column col-md-2 text-center mb-3 mt-3">
                 <h4 class="col-sm">Prix Total</h4>
-                <p class="col-sm mt-2 total-item-price">${(item.price * item.quantity) / 100} €</p>
+                <p class="col-sm mt-2 total-item-price">${(item.price * item.quantity) / 100} \u20AC</p>
               </div>
               <button type="reset" class="btn reset-btn sm-ml-4 mb-3 col col-md-1"><i class="far fa-trash-alt"></i></button>
           </div>
@@ -33,6 +44,7 @@ for (let item of basketOrder){
     totalToPay += (item.price * item.quantity) / 100;
     // DisplayTotal.innerHTML = totalToPay + " €";
     totalCount();
+  }
 }
 ;
 /********** FONCTIONNALITES POUR LA GESTION DU PANIER UNE FOIS AFFICHE DANS LA FENETRE *************/
@@ -42,65 +54,65 @@ const QuantityInput = document.querySelectorAll(".quantity");        //revoir pl
 const Plus = document.querySelectorAll("#btn-plus"); 
 const Less = document.querySelectorAll("#btn-less");
 let ItemTotalPrice = document.querySelectorAll(".total-item-price");
+if(basketOrder){  
+    for(let i = 0; i < basketOrder.length; i ++){
+      const Item = basketOrder[i];
+      const LessBtn = Less[i];
+      const PlusBtn = Plus[i];
+      let quantity = QuantityInput[i];
+      const priceItem = basketOrder[i].price;
+      let NewItemTotalPrice = ItemTotalPrice[i];
 
-for(let i = 0; i < basketOrder.length; i ++){
-  const Item = basketOrder[i];
-  const LessBtn = Less[i];
-  const PlusBtn = Plus[i];
-  let quantity = QuantityInput[i];
-  const priceItem = basketOrder[i].price;
-  let NewItemTotalPrice = ItemTotalPrice[i];
+      //on supprime un de la quantité de l'article du panier
+      function lessQuantity(){
+        if (quantity.value > 1){
+          Item.quantity --;
+          console.log( Item.quantity);
+          //on met à jour le contenu du panier au localStorage en enlevant la quantité à l'article concerné
+          localStorage.setItem("basketItems", JSON.stringify(basketOrder));
+          //on affiche le changement de quantité à l'écran et on met le prix total de l'article à jour
+          quantity.value = Item.quantity;
+          NewItemTotalPrice.innerHTML = (parseInt(quantity.value, "10") * priceItem) / 100 + " \u20AC";
+          //on met à jour le prix total à payer
+          totalCount();
+        }
+      }
+      LessBtn.addEventListener("click", lessQuantity);
 
-  //on supprime un de la quantité de l'article du panier
-  function lessQuantity(){
-    if (quantity.value > 1){
-      Item.quantity --;
-      console.log( Item.quantity);
-      //on met à jour le contenu du panier au localStorage en enlevant la quantité à l'article concerné
-      localStorage.setItem("basketItems", JSON.stringify(basketOrder));
-      //on affiche le changement de quantité à l'écran et on met le prix total de l'article à jour
-      quantity.value = Item.quantity;
-      NewItemTotalPrice.innerHTML = (parseInt(quantity.value, "10") * priceItem) / 100 + " €";
-      //on met à jour le prix total à payer
-      totalCount();
-    }
-  }
-  LessBtn.addEventListener("click", lessQuantity);
+      //on ajoute un à la quantité de l'article du panier
+      function plusQuantity(){
+        Item.quantity ++;
+        console.log( Item.quantity);
+        //on met à jour le contenu du panier au localStorage en enlevant la quantité à l'article concerné
+        localStorage.setItem("basketItems", JSON.stringify(basketOrder));
+        //on affiche le changement de quantité à l'écran et on met le prix total de l'article à jour
+        quantity.value = Item.quantity;
+        NewItemTotalPrice.innerHTML = (parseInt(quantity.value, "10") * priceItem) / 100 + " \u20AC";
+        //on met à jour le prix total à payer
+        totalCount();
 
-  //on ajoute un à la quantité de l'article du panier
-  function plusQuantity(){
-    Item.quantity ++;
-    console.log( Item.quantity);
-    //on met à jour le contenu du panier au localStorage en enlevant la quantité à l'article concerné
-    localStorage.setItem("basketItems", JSON.stringify(basketOrder));
-    //on affiche le changement de quantité à l'écran et on met le prix total de l'article à jour
-    quantity.value = Item.quantity;
-    NewItemTotalPrice.innerHTML = (parseInt(quantity.value, "10") * priceItem) / 100 + " €";
-    //on met à jour le prix total à payer
-    totalCount();
+      }
+      PlusBtn.addEventListener("click", plusQuantity);
 
-  }
-  PlusBtn.addEventListener("click", plusQuantity);
-
-  //Gestion des quantités lors de saisie par l'utlisateur
-  let quantityInputAdded = quantity.addEventListener("change", ()=>{
-    // la quantité saisie devient la valeur de l'article
-    Item.quantity = quantity.value;
-    //on met à jour le prix dans le panier dans le display
-    NewItemTotalPrice.innerHTML = (parseInt(quantity.value, "10") * priceItem) / 100 + " €";
-    // on met à jour les quantités de l'article
-    localStorage.setItem("basketItems", JSON.stringify(basketOrder));
-    totalCount();
- ;
-})
-} 
-
+      //Gestion des quantités lors de saisie par l'utlisateur
+      let quantityInputAdded = quantity.addEventListener("change", ()=>{
+        // la quantité saisie devient la valeur de l'article
+        Item.quantity = quantity.value;
+        //on met à jour le prix dans le panier dans le display
+        NewItemTotalPrice.innerHTML = (parseInt(quantity.value, "10") * priceItem) / 100 + " \u20AC";
+        // on met à jour les quantités de l'article
+        localStorage.setItem("basketItems", JSON.stringify(basketOrder));
+        totalCount();
+    ;
+    })
+    } 
+}
 //calcul du prix total
 function totalCount() {
   let totalToPay = 0;
   for (let item of basketOrder)
   totalToPay += (item.price * item.quantity) / 100;
-  DisplayTotal.innerHTML = totalToPay + " €";
+  DisplayTotal.innerHTML = totalToPay + " \u20AC";
 
 }
 // for(let btnLess of less){
@@ -118,14 +130,16 @@ function totalCount() {
 let resetBtnList = document.getElementsByClassName("reset-btn");
 
 //on récupère tous les boutons reset de la fenêtre
+if(basketOrder){
 for (let resetBtn of resetBtnList )
 resetBtn.addEventListener("click", ()=> {
       // on récupère l'id de l'élément à supprimer
     let parentId = resetBtn.parentElement.getAttribute("data-id");
-       
+     
     //on supprime l'élément dans la fenêtre via une suppression dans la div
     document.querySelector("#basketContain").removeChild(resetBtn.parentElement);
-
+    console.log("apres l'effacement il a :" + basketOrder.length);
+    
     //création d'une fonction pour filtrer les Id 
     function filterById(resetBtn){
       if(resetBtn.id != parentId){
@@ -145,27 +159,34 @@ resetBtn.addEventListener("click", ()=> {
       localStorage.setItem("basketItems", JSON.stringify(basketOrder));
     } else {
       localStorage.removeItem("basketItems");
-      titleOfBasket()
+      document.querySelector("#text-basket").innerText = "Votre panier est vide !";
+      document.querySelector("#form-order").classList.add("d-none");
+      document.querySelector(".total").classList.add("d-none");
     }
-    console.log (basketOrderWithoutIt);
-    totalCount();
     
-    // on enlève le prix total de l'objet du panier total
+    //on met à jour le prix total
+    totalCount();
 
-  //   let totalPriceToRemove = parseInt(resetBtn.previousElementSibling.lastElementChild.innerHTML, "10")
-  //  ;
-    // et on met à jour le localStorage : si à zéro message panier vide, sinon on envoi les données;
-    titleOfBasket();
 });
-
+}
 
 // si le panier est vide changement du titre du panier
-function titleOfBasket(){
-  if (basketOrder === 0 || !basketOrder){
+// function titleOfBasket(){
+//   if (!basketOrder){
+//   document.querySelector("#text-basket").innerText = "Votre panier est vide !";
+//   document.querySelector("#form-order").classList.add("hidden");
+//   DisplayTotal.classList.add("hidden");
+//   } else{ 
+//   document.querySelector("#text-basket").innerText = "Votre panier contient :";
+//   document.querySelector("#form-order").classList.remove("d-none");
+//   document.querySelector(".total").classList.add("d-none");;
+//   }
+// }
+// titleOfBasket();
+
+function itWasTheLast(){
+  if(basketOrder.length == 1){
   document.querySelector("#text-basket").innerText = "Votre panier est vide !";
-  
-  } else{ 
-     document.querySelector("#text-basket").innerText = "Votre panier contient :";
+  document.querySelector("#form-order").classList.add("hidden");
   }
 }
-titleOfBasket();
