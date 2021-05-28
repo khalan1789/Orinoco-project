@@ -1,25 +1,35 @@
-//Récupérer les données du localStorage
+////****Récupérer les données du localStorage ********////
 //récupération du panier
 let basketOrder = JSON.parse(localStorage.getItem("basketItems"));
-// titleOfBasket();
 
-/**************         PRIX TOTAL A L'IMPORT DU PANIER   ****************** */
-let totalToPay = 0;
-const DisplayTotal = document.querySelector("#totalBasketPrice");
- // récupération et attribution des données dans le panier
-if(!basketOrder){
+//////****** VERIFICATION SI LE PANIER CONTIENT DES CHOSES OU NON ******///////
+function basketEmpty(){
   document.querySelector("#text-basket").innerText = "Votre panier est vide !";
   document.querySelector("#text-basket").classList.add("mt-5", "mb-5");
-  document.querySelector("#form-order").classList.add("text-white-50");
+  document.querySelector("#form-order").classList.add("text-black-50");
   document.querySelector(".total").classList.add("d-none");
-}else{
+  btnFormValid.classList.add("d-none");
+}
+
+function basketNotEmpty(){
   document.querySelector("#text-basket").innerText = "Votre panier contient :";
   document.querySelector("#text-basket").classList.remove("mt-5", "mb-5");
-  document.querySelector("#form-order").classList.remove("text-white-50");
-  document.querySelector(".total").classList.remove("d-none");
+  document.querySelector("#form-order").classList.remove("text-black-50");
   DisplayTotal.classList.remove("d-none");
+  btnFormValid.classList.remove("d-none");
+}
+
+////**************         PRIX TOTAL A L'IMPORT DU PANIER   ****************** *////
+let totalToPay = 0;
+const DisplayTotal = document.querySelector("#totalBasketPrice");
+const btnFormValid = document.querySelector("#btn-form-valid");
+ // récupération et attribution des données dans le panier
+if(!basketOrder){
+  basketEmpty();
+}else{
+  basketNotEmpty();
+  //affichage des articles du panier
   for (let item of basketOrder){
- 
     document.querySelector("#basketContain").insertAdjacentHTML("beforeend", `
       <div class="row mt-2 mb-3 border-bottom border-primary" data-id=${item.id}>
       <img src="${item.image}" class="col-12 col-md-4 col-lg-3" alt="photo de l'article">
@@ -47,7 +57,7 @@ if(!basketOrder){
   }
 }
 ;
-/********** FONCTIONNALITES POUR LA GESTION DU PANIER UNE FOIS AFFICHE DANS LA FENETRE *************/
+///********** FONCTIONNALITES POUR LA GESTION DU PANIER UNE FOIS AFFICHE DANS LA FENETRE ***********///
 
 // Pour ajouter supprimer un artcile et l'afficher dans l'input
 const QuantityInput = document.querySelectorAll(".quantity");        //revoir plus tard pour mettre une regExp pour l'input
@@ -159,9 +169,7 @@ resetBtn.addEventListener("click", ()=> {
       localStorage.setItem("basketItems", JSON.stringify(basketOrder));
     } else {
       localStorage.removeItem("basketItems");
-      document.querySelector("#text-basket").innerText = "Votre panier est vide !";
-      document.querySelector("#form-order").classList.add("d-none");
-      document.querySelector(".total").classList.add("d-none");
+      basketEmpty();
     }
     
     //on met à jour le prix total
@@ -170,23 +178,245 @@ resetBtn.addEventListener("click", ()=> {
 });
 }
 
-// si le panier est vide changement du titre du panier
-// function titleOfBasket(){
-//   if (!basketOrder){
-//   document.querySelector("#text-basket").innerText = "Votre panier est vide !";
-//   document.querySelector("#form-order").classList.add("hidden");
-//   DisplayTotal.classList.add("hidden");
-//   } else{ 
-//   document.querySelector("#text-basket").innerText = "Votre panier contient :";
-//   document.querySelector("#form-order").classList.remove("d-none");
-//   document.querySelector(".total").classList.add("d-none");;
-//   }
-// }
-// titleOfBasket();
 
-function itWasTheLast(){
-  if(basketOrder.length == 1){
-  document.querySelector("#text-basket").innerText = "Votre panier est vide !";
-  document.querySelector("#form-order").classList.add("hidden");
+///////////**********GESTION DU FORMULAIRE ***********///////////
+//fonction pour indiquer visuellement que ce n'est pas valide
+function ifDanger(value){
+  if (value.classList.contains("border-success")) {
+    value.classList.remove("border-success");
+   }
+   value.classList.add("border-danger");
+  
+  console.log("oh oui c'est bon ça!!" + this.value);
+}
+//fonction pour indiquer visuellement que c'est ok pour la saisie
+function ifSuccess(value){
+  if(value.classList.contains("border-danger")){
+    value.classList.remove("border-danger");
+ }
+ value.classList.add("border-success")
+}
+//fonction pour enlever les indicateurs visuels si l'input redevient à 0 après une saisie
+function noMoreInput(element){
+  if (element.classList.contains("border-danger", "text-danger")) {
+    element.classList.remove("border-danger", "text-danger");
+  }
+  else if (element.classList.contains("border-success", "text-success")){
+    element.classList.remove("border-success", "text-success");
   }
 }
+
+// let onlyLetterRegExp = new RegExp("^[A-Za-z- ]+$", "g");
+
+
+//nom
+const UserName = document.querySelector("#userName");
+let userNameValid = false;
+UserName.addEventListener("change", function(){
+  //création de la regExp pour la saisie de texte
+  let onlyLetterRegExp = new RegExp("^[A-Za-z- ]+$", "g");
+  console.log("n°1" + this.value);
+ //test de la regExp
+  let textRegExp = onlyLetterRegExp.test(this.value);
+ //ciblage du paragraphe sous l'input
+  let small = this.nextElementSibling;
+
+ console.log("n°2" + textRegExp);
+ console.log("n°3" + this.value);
+ //si le test est bon 
+ /****Ca merdsouille ici à reprendrre*** */
+ if (!this.value) {
+    noMoreInput(this);
+    small.innerHTML = "";
+    userNameValid = false;
+  }else{
+  //si le contrôle regExp est ok
+    if(textRegExp){
+      ifSuccess(this) 
+      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
+      console.log("hum tu sens que ça viens là" + this.value);
+      userNameValid = true;
+      console.log("verif si nom est bon " + userNameValid );
+    }else{
+      ifDanger(this);
+      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir un nom correct, les chiffres et autres caractères sont interdits';
+      userNameValid = false;
+      console.log("verif si nom est pas bon " + userNameValid );
+    }
+  }
+});
+
+
+
+/////////////////////////////////////
+
+// //prénom
+const UserFirstName = document.querySelector("#userFirstName");
+let userFirstNameValid = false;
+UserFirstName.addEventListener("change", function(){
+  let onlyLetterRegExp = new RegExp("^[A-Za-z- ]+$", "g")
+  let textRegExp = onlyLetterRegExp.test(this.value);
+  let small = this.nextElementSibling;
+
+  if (!this.value) {
+    noMoreInput(this);
+    small.innerHTML = "";
+    userFirstNameValid = false;
+  }else{
+      if(textRegExp){
+      ifSuccess(this) 
+      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
+      userFirstNameValid = true;
+      console.log("hum tu sens que ça viens là" + this.value);
+    }else{
+      ifDanger(this);
+      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir un prénom correct, les chiffres et autres caractères sont interdits';
+      userFirstNameValid = false;
+    }
+  }
+});
+
+// //adress
+const UserAdress = document.querySelector("#userAddress");
+let userAdressValid = false;
+UserAdress.addEventListener("change",function (){
+  let onlyLetterRegExp = new RegExp("^[A-Za-z- 0-9']+$", "g")
+  let textRegExp = onlyLetterRegExp.test(this.value);
+  let small = this.nextElementSibling;
+
+  if (!this.value) {
+    noMoreInput(this);
+    small.innerHTML = "";
+    userAdressValid = false;
+  }else{
+      if(textRegExp){
+      ifSuccess(this) 
+      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
+      console.log("hum tu sens que ça viens là" + this.value);
+      userAdressValid = true;
+    }else{
+      ifDanger(this);
+      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir une adresse correcte, les caractères spéciaux (&,",@ etc...) sont interdits';
+      userAdressValid = false;
+    }
+  }
+
+});
+
+// //postal code
+const UserPostalCode = document.querySelector("#postalCode");
+let userPostalCodeValid = false;
+UserPostalCode.addEventListener("change", function(){
+  let onlyLetterRegExp = new RegExp("^[0-9]{4,6}$", "g")
+  let textRegExp = onlyLetterRegExp.test(this.value);
+  let small = this.nextElementSibling;
+
+  if (!this.value) {
+    noMoreInput(this);
+    small.innerHTML = "";
+    userPostalCodeValid = false;
+  }else{
+      if(textRegExp){
+      ifSuccess(this) 
+      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
+      console.log("hum tu sens que ça viens là" + this.value);
+      userPostalCodeValid = true;
+    }else{
+      ifDanger(this);
+      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir un code postal valide de 4 à 6 chiffres</p>';
+      userPostalCodeValid = false;
+    }
+  }
+})
+
+// //city
+const UserCity = document.querySelector("#city");
+let userCityValid = false;
+UserCity.addEventListener("change", function(){
+  let onlyLetterRegExp = new RegExp("^[A-Za-z- ]{2,58}$", "g")
+  let textRegExp = onlyLetterRegExp.test(this.value);
+  let small = this.nextElementSibling;
+
+  if (!this.value) {
+    noMoreInput(this);
+    small.innerHTML = "";
+    userCityValid = false;
+  }else{
+      if(textRegExp){
+      ifSuccess(this) 
+      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
+      console.log("hum tu sens que ça viens là" + this.value);
+      userCityValid = true;
+    }else{
+      ifDanger(this);
+      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir un nom de ville correct, les chiffres et autres caractères sont interdits';
+      userCityValid = false;
+    }
+  }
+});
+
+//country
+const UserCountry = document.querySelector("#country");
+let userCountryValid = false;
+UserCountry.addEventListener("change", function(){
+  let onlyLetterRegExp = new RegExp("^[A-Za-z- ]{3,60}$", "g")
+  let textRegExp = onlyLetterRegExp.test(this.value);
+  let small = this.nextElementSibling;
+
+  if (!this.value) {
+    noMoreInput(this);
+    small.innerHTML = "";
+    userCountryValid = false;
+  }else{
+      if(textRegExp){
+      ifSuccess(this) 
+      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
+      console.log("hum tu sens que ça viens là" + this.value);
+      userCountryValid = true;
+    }else{
+      ifDanger(this);
+      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir un nom de pays correct, les chiffres et autres caractères sont interdits';
+      userCountryValid = false;
+    }
+  }
+});
+
+//email
+const UserEmail = document.querySelector("#userEmail");
+let userEmailValid = false;
+
+UserEmail.addEventListener("change", function(){
+  let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,8}$', 'g')
+  console.log(this.value)
+  let testEmail = emailRegExp.test(this.value);
+  let small = this.nextElementSibling;
+
+  if (!this.value) {
+    noMoreInput(this);
+    small.innerHTML = "";
+    userEmailValid = false;
+  }else{
+     if(testEmail){
+      ifSuccess(this) 
+      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
+      userEmailValid = true;
+    }
+    else{
+        small.innerHTML = '<p class="text-center text-danger font-italic">Adresse mail non valide,vérifiez votre saisie"</p>';
+        ifDanger(this);
+        userEmailValid = false;
+        
+    }
+  }  
+});
+
+//validation du formulaire au clic
+btnFormValid.addEventListener("click", function(e){
+  if(!userNameValid == true || !userFirstNameValid == true || !userAdressValid == true || !userPostalCodeValid == true || !userCityValid == true || !userCountryValid == true || !userEmailValid == true ){
+    e.preventDefault();
+  }
+  else{
+    e.preventDefault();
+    console.log("données validées : " + UserName.value + " "+ UserFirstName.value+ " "+UserAdress.value +" "+UserPostalCode.value + " "+UserCity.value + " "+UserCountry.value +" " +UserEmail.value+ "");
+  }
+})
