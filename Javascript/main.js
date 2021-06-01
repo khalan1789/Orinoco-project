@@ -15,6 +15,10 @@ class TeddyArticle {
 // Récupération des données à l"API
     fetch(ApiToFetch)
     .then(response => response.json())
+    .catch((error)=>{
+      console.log(error)
+      window.location.assign("error.html");
+    })
     .then(teddiesList => {
       // Récupération du array des teddy et implantation de chacun dans le html
       for (let teddy of teddiesList){
@@ -31,6 +35,7 @@ class TeddyArticle {
       }    
     }
     )
+    
 
   /*//si le storage a déjà le tavleau de la liste
   if(localStorage.getItem("teddiesListForStorage")){

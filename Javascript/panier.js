@@ -2,6 +2,9 @@
 //récupération du panier
 let basketOrder = JSON.parse(localStorage.getItem("basketItems"));
 
+// tableau des id pour le POST
+const products = [];
+
 //////****** VERIFICATION SI LE PANIER CONTIENT DES CHOSES OU NON ******///////
 function basketEmpty(){
   document.querySelector("#text-basket").innerText = "Votre panier est vide !";
@@ -54,6 +57,7 @@ if(!basketOrder){
     totalToPay += (item.price * item.quantity) / 100;
     // DisplayTotal.innerHTML = totalToPay + " €";
     totalCount();
+    products.push(item.id);
   }
 }
 ;
@@ -189,6 +193,7 @@ resetBtn.addEventListener("click", ()=> {
     totalCount();
 
 });
+
 }
 
 
@@ -322,9 +327,3 @@ class contact {
  const user = new contact(lastName, firstName, address, city, email, postal, totalCount);
  return user
 }
-// tableau des id pour le POST
- const products = [];
- for (let item of basketOrder){
-  let productId = item.id;
-  products.push(productId)
- }
