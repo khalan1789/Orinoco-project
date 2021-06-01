@@ -1,0 +1,16 @@
+{
+  "name": "front-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "sass": "sass --watch sass/style.scss:css/style.css"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.0.0",
+    "sass": "^1.32.12",
+    "save": "^2.4.0"
+  }
+}

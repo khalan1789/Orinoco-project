@@ -1,5 +1,5 @@
-$primary: white;
-
+$primary: #fff;
+$cyan: #0d6973;
 .card-img-top{
     @media screen and(min-width:780px) {
         height:200px;
@@ -101,3 +101,18 @@ main{
          
      }
  }
+
+ .border-valid{
+     border-color : $green;
+ }
+ .border-invalid{
+     border-color: red;
+ }
+
+/************* PAGE ERROR ***************/
+
+//icone 
+
+.alert-icon{
+    font-size: 5rem;
+}
