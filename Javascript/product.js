@@ -17,6 +17,10 @@ fetch(ApiToFetch + "/" + Id)
       console.log("erreur :" + response.status)
     }
   })
+  .catch((error)=>{
+    console.log(error)
+    window.location.assign("error.html");
+  })
   .then(teddyItem => {
         console.log (teddyItem)
         

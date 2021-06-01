@@ -142,16 +142,6 @@ function totalCount() {
   DisplayTotal.innerHTML = totalToPay + " \u20AC";
 
 }
-// for(let btnLess of less){
-//   btnLess.addEventListener("click", lessQuantity);
-// }
-
-
-/****************** si besoin d'un bouton pour reset le panier
-  document.querySelector("#deleteBasketButton").addEventListener("click",()=> {
-    localStorage.removeItem("basketItems")
-  })
-********************/
 
 /****RESET DE L'ARTICLE AU BOUTON ****/
 let resetBtnList = document.getElementsByClassName("reset-btn");
