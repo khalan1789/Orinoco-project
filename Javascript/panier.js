@@ -38,7 +38,7 @@ if(!basketOrder){
               <label class="col-12 col-sm mt-3 text-center"> Quantité</label>
               <div class="col-12 col-sm mt-4 d-flex justify-content-center">   
                   <button type="button" id="btn-less" class="btn mr-4" aria-labelledby ="button less"><i class="fas fa-minus"></i></button>
-                  <input type="text" class="quantity" class="col-3 col-sm-4" value ="${item.quantity}"></input>
+                  <input type="number" class="quantity" class="col-3 col-sm-4" max="100" value ="${item.quantity}" pattern="^[0-9]$"></input>
                   <button type="button" id="btn-plus" class="btn ml-4" aria-labelledby ="button plus"><i class="fas fa-plus-square"></i></button>
               </div>
               </div>
@@ -63,7 +63,7 @@ if(!basketOrder){
 const QuantityInput = document.querySelectorAll(".quantity");        //revoir plus tard pour mettre une regExp pour l'input
 const Plus = document.querySelectorAll("#btn-plus"); 
 const Less = document.querySelectorAll("#btn-less");
-let ItemTotalPrice = document.querySelectorAll(".total-item-price");
+const ItemTotalPrice = document.querySelectorAll(".total-item-price");
 if(basketOrder){  
     for(let i = 0; i < basketOrder.length; i ++){
       const Item = basketOrder[i];
@@ -104,15 +104,28 @@ if(basketOrder){
       }
       PlusBtn.addEventListener("click", plusQuantity);
 
-      //Gestion des quantités lors de saisie par l'utlisateur
-      let quantityInputAdded = quantity.addEventListener("change", ()=>{
+      //Gestion des quantités lors de saisie par l'utlisateur               /********HERERERERERERRE */
+      quantity.addEventListener("change", function(){
+        // let quantityInput = this.value;
+        let quantityRegExp = new RegExp("^[0-9]{1,3}$");
+        let quantityTest = quantityRegExp.test(this.value)
+        if(quantityTest){
         // la quantité saisie devient la valeur de l'article
-        Item.quantity = quantity.value;
+        Item.quantity = parseInt(quantity.value, "10");
         //on met à jour le prix dans le panier dans le display
         NewItemTotalPrice.innerHTML = (parseInt(quantity.value, "10") * priceItem) / 100 + " \u20AC";
         // on met à jour les quantités de l'article
         localStorage.setItem("basketItems", JSON.stringify(basketOrder));
         totalCount();
+        }
+        else{
+        alert("Saisie incorrecte pour cet article"); // A VOIR ICI
+        this.value = 1;
+        Item.quantity = parseInt(quantity.value, "10");
+        NewItemTotalPrice.innerHTML = (parseInt(quantity.value, "10") * priceItem) / 100 + " \u20AC";
+        localStorage.setItem("basketItems", JSON.stringify(basketOrder));
+        totalCount()
+        }
     ;
     })
     } 
@@ -186,8 +199,6 @@ function ifDanger(value){
     value.classList.remove("border-success");
    }
    value.classList.add("border-danger");
-  
-  console.log("oh oui c'est bon ça!!" + this.value);
 }
 //fonction pour indiquer visuellement que c'est ok pour la saisie
 function ifSuccess(value){
@@ -206,217 +217,114 @@ function noMoreInput(element){
   }
 }
 
-// let onlyLetterRegExp = new RegExp("^[A-Za-z- ]+$", "g");
-
-
-//nom
-const UserName = document.querySelector("#userName");
-let userNameValid = false;
-UserName.addEventListener("change", function(){
-  //création de la regExp pour la saisie de texte
-  let onlyLetterRegExp = new RegExp("^[A-Za-z- ]+$", "g");
-  console.log("n°1" + this.value);
- //test de la regExp
-  let textRegExp = onlyLetterRegExp.test(this.value);
- //ciblage du paragraphe sous l'input
-  let small = this.nextElementSibling;
-
- console.log("n°2" + textRegExp);
- console.log("n°3" + this.value);
- //si le test est bon 
- /****Ca merdsouille ici à reprendrre*** */
- if (!this.value) {
-    noMoreInput(this);
-    small.innerHTML = "";
-    userNameValid = false;
-  }else{
-  //si le contrôle regExp est ok
-    if(textRegExp){
-      ifSuccess(this) 
-      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
-      console.log("hum tu sens que ça viens là" + this.value);
-      userNameValid = true;
-      console.log("verif si nom est bon " + userNameValid );
+//vérification que tout est bien bon après la saisie dans un input
+let formInputs = document.querySelectorAll("#form-order input");
+for (let input of formInputs){
+  input.addEventListener("change", function(){
+      //si la saisie est correcte ou non changer le visuel de l'imput
+    if(input.reportValidity()){
+      ifSuccess(input);
+     
     }else{
-      ifDanger(this);
-      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir un nom correct, les chiffres et autres caractères sont interdits';
-      userNameValid = false;
-      console.log("verif si nom est pas bon " + userNameValid );
-    }
+      ifDanger(input);
+    };
   }
-});
+  )
+};
 
-
-
-/////////////////////////////////////
-
-// //prénom
-const UserFirstName = document.querySelector("#userFirstName");
-let userFirstNameValid = false;
-UserFirstName.addEventListener("change", function(){
-  let onlyLetterRegExp = new RegExp("^[A-Za-z- ]+$", "g")
-  let textRegExp = onlyLetterRegExp.test(this.value);
-  let small = this.nextElementSibling;
-
-  if (!this.value) {
-    noMoreInput(this);
-    small.innerHTML = "";
-    userFirstNameValid = false;
-  }else{
-      if(textRegExp){
-      ifSuccess(this) 
-      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
-      userFirstNameValid = true;
-      console.log("hum tu sens que ça viens là" + this.value);
+//actions de vérification du formulaire au moment de l'envoi    
+const FormOrder = document.querySelector("#form-order");                   /////ICI ENVOI *****
+FormOrder.addEventListener("submit", function(e){
+  e.preventDefault();
+  //variable pour vérifier si la saisie est correcte et retourne true
+  let inputValid = true;
+  //parcours de chacun des inputs pour vérification
+  for (let input of document.querySelectorAll("#form-order input")){
+      
+    inputValid = inputValid && input.reportValidity;
+    if(input.reportValidity()){
+      ifSuccess(input);
+    inputValid = true;
+    console.log("l'input est " + inputValid);
     }else{
-      ifDanger(this);
-      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir un prénom correct, les chiffres et autres caractères sont interdits';
-      userFirstNameValid = false;
-    }
-  }
-});
-
-// //adress
-const UserAdress = document.querySelector("#userAddress");
-let userAdressValid = false;
-UserAdress.addEventListener("change",function (){
-  let onlyLetterRegExp = new RegExp("^[A-Za-z- 0-9']+$", "g")
-  let textRegExp = onlyLetterRegExp.test(this.value);
-  let small = this.nextElementSibling;
-
-  if (!this.value) {
-    noMoreInput(this);
-    small.innerHTML = "";
-    userAdressValid = false;
-  }else{
-      if(textRegExp){
-      ifSuccess(this) 
-      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
-      console.log("hum tu sens que ça viens là" + this.value);
-      userAdressValid = true;
-    }else{
-      ifDanger(this);
-      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir une adresse correcte, les caractères spéciaux (&,",@ etc...) sont interdits';
-      userAdressValid = false;
-    }
-  }
-
-});
-
-// //postal code
-const UserPostalCode = document.querySelector("#postalCode");
-let userPostalCodeValid = false;
-UserPostalCode.addEventListener("change", function(){
-  let onlyLetterRegExp = new RegExp("^[0-9]{4,6}$", "g")
-  let textRegExp = onlyLetterRegExp.test(this.value);
-  let small = this.nextElementSibling;
-
-  if (!this.value) {
-    noMoreInput(this);
-    small.innerHTML = "";
-    userPostalCodeValid = false;
-  }else{
-      if(textRegExp){
-      ifSuccess(this) 
-      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
-      console.log("hum tu sens que ça viens là" + this.value);
-      userPostalCodeValid = true;
-    }else{
-      ifDanger(this);
-      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir un code postal valide de 4 à 6 chiffres</p>';
-      userPostalCodeValid = false;
-    }
-  }
-})
-
-// //city
-const UserCity = document.querySelector("#city");
-let userCityValid = false;
-UserCity.addEventListener("change", function(){
-  let onlyLetterRegExp = new RegExp("^[A-Za-z- ]{2,58}$", "g")
-  let textRegExp = onlyLetterRegExp.test(this.value);
-  let small = this.nextElementSibling;
-
-  if (!this.value) {
-    noMoreInput(this);
-    small.innerHTML = "";
-    userCityValid = false;
-  }else{
-      if(textRegExp){
-      ifSuccess(this) 
-      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
-      console.log("hum tu sens que ça viens là" + this.value);
-      userCityValid = true;
-    }else{
-      ifDanger(this);
-      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir un nom de ville correct, les chiffres et autres caractères sont interdits';
-      userCityValid = false;
-    }
-  }
-});
-
-//country
-const UserCountry = document.querySelector("#country");
-let userCountryValid = false;
-UserCountry.addEventListener("change", function(){
-  let onlyLetterRegExp = new RegExp("^[A-Za-z- ]{3,60}$", "g")
-  let textRegExp = onlyLetterRegExp.test(this.value);
-  let small = this.nextElementSibling;
-
-  if (!this.value) {
-    noMoreInput(this);
-    small.innerHTML = "";
-    userCountryValid = false;
-  }else{
-      if(textRegExp){
-      ifSuccess(this) 
-      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
-      console.log("hum tu sens que ça viens là" + this.value);
-      userCountryValid = true;
-    }else{
-      ifDanger(this);
-      small.innerHTML = '<p class="text-center text-danger font-italic">Saisie incorrecte! Veuillez saisir un nom de pays correct, les chiffres et autres caractères sont interdits';
-      userCountryValid = false;
-    }
-  }
-});
-
-//email
-const UserEmail = document.querySelector("#userEmail");
-let userEmailValid = false;
-
-UserEmail.addEventListener("change", function(){
-  let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,8}$', 'g')
-  console.log(this.value)
-  let testEmail = emailRegExp.test(this.value);
-  let small = this.nextElementSibling;
-
-  if (!this.value) {
-    noMoreInput(this);
-    small.innerHTML = "";
-    userEmailValid = false;
-  }else{
-     if(testEmail){
-      ifSuccess(this) 
-      small.innerHTML = '<p class="text-right"><i class="fas fa-check text-success"></i></p>'
-      userEmailValid = true;
-    }
-    else{
-        small.innerHTML = '<p class="text-center text-danger font-italic">Adresse mail non valide,vérifiez votre saisie"</p>';
-        ifDanger(this);
-        userEmailValid = false;
+      ifDanger(input);
+      inputValid = false;
+      console.log("l'input doit être " + inputValid);
+    };
+  } 
+  //si donc tous les imputs sont valides
+  if(inputValid){
+     
+      //récupération des infos et création de l'objet à envoyer
+      let contact = getUserInfo();
+      let dataOrder = {contact, products};
+             
+      console.log("newContact")
+      // console.log(contact);
+      
+      console.log("products");
+      console.log(products);
+      console.log("objet a fetch")
+      console.log(dataOrder);
+      fetch('http://localhost:3000/api/teddies/order', {
+        method: "POST",
+        headers: { 
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json', 
+       },
+       body: JSON.stringify(dataOrder)
+      })
+      .then(function(response){
+        if(response.ok){
+          return response.json()
+        }
+      })
+      .then(order => {
+        console.log("order");
+        console.log(order);
+        localStorage.setItem("order", JSON.stringify(order));
+        localStorage.removeItem("basketItems")
+        window.location.assign("order.html");
+      })
+      // .catch( (error) => {
+      //   console.log(error)});
         
-    }
-  }  
-});
-
-//validation du formulaire au clic
-btnFormValid.addEventListener("click", function(e){
-  if(!userNameValid == true || !userFirstNameValid == true || !userAdressValid == true || !userPostalCodeValid == true || !userCityValid == true || !userCountryValid == true || !userEmailValid == true ){
-    e.preventDefault();
   }
-  else{
-    e.preventDefault();
-    console.log("données validées : " + UserName.value + " "+ UserFirstName.value+ " "+UserAdress.value +" "+UserPostalCode.value + " "+UserCity.value + " "+UserCountry.value +" " +UserEmail.value+ "");
-  }
+  e.stopPropagation();
 })
+
+/****** MISE EN PLACE DE L'OBJET CONTACT ET DU TABLEAU POUR POST ******/
+
+//Objet contact
+
+class contact {
+  constructor (lastName, firstName, address, city, email, postal, totalCount){
+    this.lastName = lastName,
+    this.firstName = firstName,
+    this.address = address,
+    this.city = city,
+    this.email = email
+    this.postal = postal,
+    this.totalCount = totalCount
+  }
+}
+
+//Récupération des infops user pour le POST
+ function getUserInfo(){
+ let lastName = document.querySelector("#userName").value;
+ let firstName =  document.querySelector("#userFirstName").value;
+ let address =  document.querySelector("#userAddress").value;
+ let city =  document.querySelector("#city").value;
+ let email =  document.querySelector("#userEmail").value;
+ let postal = document.querySelector("#postalCode").value;
+ let totalCount = document.querySelector("#totalBasketPrice").innerHTML;
+ 
+ const user = new contact(lastName, firstName, address, city, email, postal, totalCount);
+ return user
+}
+// tableau des id pour le POST
+ const products = [];
+ for (let item of basketOrder){
+  let productId = item.id;
+  products.push(productId)
+ }
