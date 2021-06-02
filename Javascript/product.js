@@ -83,7 +83,7 @@ fetch(ApiToFetch + "/" + Id)
             localStorage.setItem("basketItems", JSON.stringify(basketOrder));
           };
       };
-      window.confirm("Ajouter au panier ?"); 
+      window.alert("Quantité ajoutée au panier !"); 
     });     
   }); 
 
