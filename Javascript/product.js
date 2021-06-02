@@ -77,19 +77,19 @@ fetch(ApiToFetch + "/" + Id)
               localStorage.setItem("basketItems", JSON.stringify(basketOrder));
             };
           };                       
-
             // si l'objet n'est pas dans le tableau, on l'ajoute et on envoie au storage
           if(!isAlreadyExist){
             basketOrder.push(dataTeddyItem);
             localStorage.setItem("basketItems", JSON.stringify(basketOrder));
           };
       };
+      window.confirm("Ajouter au panier ?"); 
     });     
   }); 
 
-   /******* Fonctions pour ajouter supprimer un artcile et afficher la quantité dans l'input ***** */
+  /******* Fonctions pour ajouter supprimer un artcile et afficher la quantité dans l'input ***** */
 
-let quantityInput = document.querySelector(".quantity");
+  let quantityInput = document.querySelector(".quantity");
 let plus = document.querySelector("#btn-plus"); 
 let less = document.querySelector("#btn-less");
 
