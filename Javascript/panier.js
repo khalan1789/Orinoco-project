@@ -41,9 +41,9 @@ if(!basketOrder){
             <h4 class="col-sm mb-3 mt-3 text-center ">${item.name}</h4>
             <label class="col-12 col-sm mt-3 text-center"> Quantité</label>
             <div class="col-12 col-sm mt-4 d-flex justify-content-center">   
-                <button type="button" id="btn-less" class="btn mr-4" aria-labelledby ="button less"><i class="fas fa-minus"></i></button>
-                <input type="number" class="quantity" class="col-3 col-sm-4" max="100" value ="${item.quantity}" pattern="^[0-9]$"></input>
-                <button type="button" id="btn-plus" class="btn ml-4" aria-labelledby ="button plus"><i class="fas fa-plus-square"></i></button>
+                <button type="button" id="btn-less" class="btn mr-4" aria-label ="bouton moins pour enlever une quantité"><i class="fas fa-minus"></i></button>
+                <input type="number" class="quantity" class="col-3 col-sm-4" max="100" value ="${item.quantity}" pattern="^[0-9]$" aria-label="quantité à ajouter au panier"></input>
+                <button type="button" id="btn-plus" class="btn ml-4" aria-label ="bouton plus pour ajouter une quantité"><i class="fas fa-plus-square"></i></button>
             </div>
             </div>
             <div class="d-flex justify-content-center flex-column col-md-2 text-center mb-3 mt-3">
