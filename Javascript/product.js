@@ -2,7 +2,6 @@ const ApiToFetch = 'http://localhost:3000/api/teddies';
 
 /*Récupération de l'id dans l'url au chargement de la page */
 
-const UrlQueryString = window.location.search;
 const UrlParams = new URLSearchParams(window.location.search);
 const Id = UrlParams.get("id");
 
@@ -24,8 +23,7 @@ fetch(ApiToFetch + "/" + Id)
     window.location.assign("error.html");
   })
   .then(teddyItem => {
-    console.log (teddyItem)
-        
+    //récupération des informations de l'objet en question et insertions des infos 
     document.querySelector(".product-title").innerText = teddyItem.name;
     document.querySelector(".product-description").innerText = teddyItem.description;
     document.querySelector(".product-price").innerText = "Prix : " + teddyItem.price / 100 + " \u20AC";
@@ -50,8 +48,7 @@ fetch(ApiToFetch + "/" + Id)
         image : teddyItem.imageUrl,
         quantity : parseInt(quantityInput.value, "10")
       }
-      console.log(dataTeddyItem)
-        //Si le panier du Storage est vide    
+    //Si le panier du Storage est vide    
       if (!basketOrder){ 
          //on crée le panier et on met l'objet avec la quantité et ses infos dedans
         basketOrder = [];
@@ -69,10 +66,8 @@ fetch(ApiToFetch + "/" + Id)
             // si oui il y est déjà
             if(item.name == dataTeddyItem.name){
               isAlreadyExist = true;
-              console.log(item.name);
               // on ajoute la quantité saisie à celle déjà existante pour l'objet
               item.quantity += parseInt(quantityInput.value, "10");
-              console.log(item.quantity)
               //   et on met à jour le storage
               localStorage.setItem("basketItems", JSON.stringify(basketOrder));
             };
@@ -89,7 +84,7 @@ fetch(ApiToFetch + "/" + Id)
 
   /******* Fonctions pour ajouter supprimer un artcile et afficher la quantité dans l'input ***** */
 
-  let quantityInput = document.querySelector(".quantity");
+let quantityInput = document.querySelector(".quantity");
 let plus = document.querySelector("#btn-plus"); 
 let less = document.querySelector("#btn-less");
 
@@ -150,8 +145,8 @@ quantityInput.addEventListener("change", () =>{
     BtnSendToBasket.setAttribute("disabled", true);
     alert("Une quantité doit être saisie !");
   }else{
-  BtnSendToBasket.removeAttribute("disabled");
-  formatQuantity();
+    BtnSendToBasket.removeAttribute("disabled");
+    formatQuantity();
   }
 });
 

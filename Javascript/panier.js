@@ -61,10 +61,20 @@ if(!basketOrder){
   }
 }
 ;
+
+//calcul du prix total
+function totalCount() {
+  let totalToPay = 0;
+  for (let item of basketOrder)
+  totalToPay += (item.price * item.quantity) / 100;
+  DisplayTotal.innerHTML = totalToPay + " \u20AC";
+}
+
 ///********** FONCTIONNALITES POUR LA GESTION DU PANIER UNE FOIS AFFICHE DANS LA FENETRE ***********///
 
 // Pour ajouter supprimer un artcile et l'afficher dans l'input
-const QuantityInput = document.querySelectorAll(".quantity");        //revoir plus tard pour mettre une regExp pour l'input
+
+const QuantityInput = document.querySelectorAll(".quantity");        
 const Plus = document.querySelectorAll("#btn-plus"); 
 const Less = document.querySelectorAll("#btn-less");
 const ItemTotalPrice = document.querySelectorAll(".total-item-price");
@@ -86,7 +96,6 @@ if(basketOrder){
     function lessQuantity(){
       if (quantity.value > 1){
         Item.quantity --;
-        console.log( Item.quantity);
         //on met à jour le contenu du panier au localStorage en enlevant la quantité à l'article concerné
         sendBasketOrderToStorage();
         //on affiche le changement de quantité à l'écran et on met le prix total de l'article à jour
@@ -101,7 +110,6 @@ if(basketOrder){
     //on ajoute un à la quantité de l'article du panier
     function plusQuantity(){
       Item.quantity ++;
-      console.log( Item.quantity);
       //on met à jour le contenu du panier au localStorage en enlevant la quantité à l'article concerné
       sendBasketOrderToStorage();
       //on affiche le changement de quantité à l'écran et on met le prix total de l'article à jour
@@ -112,7 +120,7 @@ if(basketOrder){
     }
     PlusBtn.addEventListener("click", plusQuantity);
 
-    //Gestion des quantités lors de saisie par l'utlisateur               /********HERERERERERERRE */
+    //Gestion des quantités lors de saisie par l'utlisateur              
     quantity.addEventListener("change", function(){
       // let quantityInput = this.value;
       let quantityRegExp = new RegExp("^[0-9]{1,3}$");
@@ -133,17 +141,9 @@ if(basketOrder){
         NewItemTotalPrice.innerHTML = (parseInt(quantity.value, "10") * priceItem) / 100 + " \u20AC";
         sendBasketOrderToStorage();
         totalCount()
-        }
-    ;
+        };
     })
   } 
-}
-//calcul du prix total
-function totalCount() {
-  let totalToPay = 0;
-  for (let item of basketOrder)
-  totalToPay += (item.price * item.quantity) / 100;
-  DisplayTotal.innerHTML = totalToPay + " \u20AC";
 }
 
 /****RESET DE L'ARTICLE AU BOUTON ****/
@@ -159,7 +159,6 @@ if(basketOrder){
      
     //on supprime l'élément dans la fenêtre via une suppression dans la div
     document.querySelector("#basketContain").removeChild(resetBtn.parentElement);
-    console.log("apres l'effacement il a :" + basketOrder.length);
     
     //création d'une fonction pour filtrer les Id 
     function filterById(resetBtn){
@@ -232,7 +231,7 @@ for (let input of formInputs){
 };
 
 //actions de vérification du formulaire au moment de l'envoi    
-const FormOrder = document.querySelector("#form-order");                   /////ICI ENVOI *****
+const FormOrder = document.querySelector("#form-order");                  
 FormOrder.addEventListener("submit", function(e){
   e.preventDefault();
     //variable pour vérifier si la saisie est correcte et retourne true
@@ -244,26 +243,19 @@ FormOrder.addEventListener("submit", function(e){
     if(input.reportValidity()){
       ifSuccess(input);
       inputValid = true;
-      console.log("l'input est " + inputValid);
     }else{
       ifDanger(input);
       inputValid = false;
-      console.log("l'input doit être " + inputValid);
     };
   }; 
-    //si donc tous les imputs sont valides
+    
   if(inputValid){
-      
+      //si donc tous les imputs sont valides
     //récupération des infos et création de l'objet à envoyer
     let contact = getUserInfo();
     let dataOrder = {contact, products};
-    console.log("newContact")
-        // console.log(contact);
-        
-        console.log("products");
-        console.log(products);
-        console.log("objet a fetch")
-        console.log(dataOrder);
+    
+    //envoi de l'objet dataOrder à l'api
     fetch('http://localhost:3000/api/teddies/order', {
       method: "POST",
       headers: { 
@@ -278,8 +270,6 @@ FormOrder.addEventListener("submit", function(e){
       }
     })
     .then(order => {
-      console.log("order");
-      console.log(order);
       // on envoie la commande dans le localStorage, on supprime le panier et on dirige vers la page commande
       localStorage.setItem("order", JSON.stringify(order));
       localStorage.removeItem("basketItems")

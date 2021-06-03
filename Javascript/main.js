@@ -24,15 +24,3 @@ const ApiToFetch = 'http://localhost:3000/api/teddies';
     }
   );
     
-
-// Classe constructor pour le rajout d'un article si besoin
-class TeddyArticle {
-  constructor(description, name, price,image, colors, _id){
-    this.description = description,
-    this.name = name,
-    this.price = price,
-    this.image = image,
-    this.colors = colors,
-    this._id = _id
-  }
-}
