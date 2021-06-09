@@ -55,7 +55,6 @@ if(!basketOrder){
       `
     );
     totalToPay += (item.price * item.quantity) / 100;
-    // DisplayTotal.innerHTML = totalToPay + " €";
     totalCount();
     products.push(item.id);
   }
